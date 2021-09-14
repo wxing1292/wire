@@ -7,6 +7,7 @@
 package main
 
 import (
+	"github.com/wxing1292/wire/common/cache"
 	"github.com/wxing1292/wire/common/logger"
 	"github.com/wxing1292/wire/common/metrics"
 	"github.com/wxing1292/wire/common/service"
@@ -23,7 +24,11 @@ func WireService() (*service.ServiceImpl, error) {
 	if err != nil {
 		return nil, err
 	}
-	serviceImpl, err := service.WireService(loggerImpl, metricsImpl)
+	cacheImpl, err := cache.StartCache(loggerImpl, metricsImpl)
+	if err != nil {
+		return nil, err
+	}
+	serviceImpl, err := service.StartService(cacheImpl, loggerImpl, metricsImpl)
 	if err != nil {
 		return nil, err
 	}
